@@ -1,131 +1,66 @@
-import cv2
+import math
 import numpy as np
+from logs import get_logger
 
-class DetectorFiguras:
-    FIGURAS = {
-        3: "Triangulo",
-        4: "Cuadrado/Rectangulo",
-        6: "Hexagono",
-    }
+logger = get_logger(__name__)
 
-    def __init__(self, area_minima=1500, epsilon_factor=0.03):
-        self.area_minima = area_minima
-        self.epsilon_factor = epsilon_factor
+def dist(a: tuple[float, float], b: tuple[float, float]) -> float:
+    return math.hypot(a[0] - b[0], a[1] - b[1])
 
-    def preprocesar(self, frame):
-        gris = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        blur = cv2.GaussianBlur(gris, (5, 5), 0)
-        _, umbral = cv2.threshold(blur, 60, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-        return umbral
+def angulo(a: tuple[float, float], b: tuple[float, float], c: tuple[float, float]) -> float:
+    x1, x2 = a[0] - b[0], a[1] - b[1]
+    y1, y2 = c[0] - b[0], c[1] - b[1]
+    val1 = math.hypot(x1, y1)
+    val2 = math.hypot(x2, y2)
+    if val1 < 1e-9 or val2 < 1e-9:
+        return 0.0
+    cos_ang = max(-1.0, min(1.0,(x1 * x2 + y1 * y2) / (val1 * val2)))
+    return math.degrees(math.acos(cos_ang))
 
-    def clasificar_contorno(self, contorno):
-        area = cv2.contourArea(contorno)
-        if area < self.area_minima:
-            return None
+def p_poligono(puntos: list[tuple[float, float]]) -> float:
+    n = len(puntos)
+    if n < 2:
+        return 0.0
+    return sum(dist(puntos[i], puntos[(i + 1) % n]) for i in range(n))
 
-        epsilon = self.epsilon_factor * cv2.arcLength(contorno, True)
-        aproximacion = cv2.approxPolyDP(contorno, epsilon, True)
-        vertices = len(aproximacion)
+def a_poligono(puntos: list[tuple[float, float]]) -> float:
+     arr = np.array(puntos)
+     x, y = arr[:, 0], arr[:, 1]
+     x_sig, y_sig = np.roll(x, -1), np.roll(y, -1)
+     return float(abs(np.sum(x * y_sig - x_sig * y)) / 2.0)
 
-        if vertices == 3:
-            return "Triangulo"
+def circularidad(puntos: list[tuple[float, float]]) -> float:
+    perimetro = p_poligono(puntos)
+    if perimetro < 1e-9:
+        return 0.0
+    area = a_poligono(puntos)
+    return (4 * math.pi * area) / (perimetro ** 2)
 
-        if vertices == 4:
-            x, y, w, h = cv2.boundingRect(aproximacion)
-            aspecto = w / float(h)
-            return "Cuadrado" if 0.85 <= aspecto <= 1.15 else "Rectangulo"
-
-        if vertices == 6:
+def clasificar(puntos: list[tuple[float, float]]) -> str:
+    n = len(puntos)
+    if n < 3:
+        return "Desconocido"
+    if n >= 6:
+        if circularidad(puntos) > 0.92:
+            return "Circulo"
+    if n == 3:
+        return "Triangulo"
+    if n == 4:
+        angulos = [angulo(puntos[i - 1], puntos[i], puntos[(i + 1) % n]) for i in range(n)]
+        if all(80 <= a <= 100 for a in angulos):
+            return "Cuadrado"
+        else:
+            return "Rectangulo"
+    if n in (5, 6):
+        angulos = []
+        for i in range(n):
+            punto_ant = puntos[(i - 1) % n]
+            punto_act = puntos[i]
+            punto_sig = puntos[(i + 1) % n]
+            angulos.append(angulo(punto_ant, punto_act, punto_sig))
+        angulo_prom = sum(angulos) / n
+        angulo_var = sum((a - angulo_prom) ** 2 for a in angulos) / n
+        if angulo_var < 400.0:
             return "Hexagono"
-
-        if vertices > 6:
-            perimetro = cv2.arcLength(contorno, True)
-            if perimetro == 0:
-                return None
-            circularidad = (4 * np.pi * area) / (perimetro ** 2)
-            if circularidad > 0.75:
-                return "Circulo"
-
-        return None
-
-    def detectar(self, frame):
-        umbral = self.preprocesar(frame)
-        contornos, _ = cv2.findContours(umbral, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-        resultados = []
-        for contorno in contornos:
-            figura = self.clasificar_contorno(contorno)
-            if figura:
-                M = cv2.moments(contorno)
-                if M["m00"] != 0:
-                    cx = int(M["m10"] / M["m00"])
-                    cy = int(M["m01"] / M["m00"])
-                else:
-                    cx, cy = 0, 0
-                resultados.append({"figura": figura, "contorno": contorno, "centro": (cx, cy)})
-
-        return resultados
-
-
-class Visualizador:
-    COLORES_FIGURA = {
-        "Triangulo":   (255, 100,   0),
-        "Cuadrado":    (  0, 200, 255),
-        "Rectangulo":  (  0, 255, 100),
-        "Circulo":     (200,   0, 255),
-        "Hexagono":    (  0, 165, 255),
-    }
-    COLOR_DEFAULT = (180, 180, 180)
-
-    def dibujar(self, frame, resultados):
-        for r in resultados:
-            color = self.COLORES_FIGURA.get(r["figura"], self.COLOR_DEFAULT)
-            cv2.drawContours(frame, [r["contorno"]], -1, color, 2)
-            cx, cy = r["centro"]
-            cv2.putText(
-                frame, r["figura"],
-                (cx - 40, cy),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2
-            )
-        return frame
-
-    def dibujar_info(self, frame, total):
-        texto = f"Figuras detectadas: {total}"
-        cv2.putText(frame, texto, (10, 30),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
-        cv2.putText(frame, "Q para salir", (10, 60),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (200, 200, 200), 1)
-        return frame
-
-def main():
-    detector = DetectorFiguras()
-    visualizador = Visualizador()
- 
-    camara = cv2.VideoCapture(0)
-    if not camara.isOpened():
-        print("Error: no se pudo abrir la cámara.")
-        return
- 
-    print("Cámara iniciada. Presiona Q para salir.")
- 
-    while True:
-        ret, frame = camara.read()
-        if not ret:
-            print("Error: no se pudo leer el frame.")
-            break
- 
-        resultados = detector.detectar(frame)
-        frame = visualizador.dibujar(frame, resultados)
-        frame = visualizador.dibujar_info(frame, len(resultados))
- 
-        cv2.imshow("Detector de Figuras", frame)
- 
-        if cv2.waitKey(1) & 0xFF == ord("q"):
-            break
- 
-    camara.release()
-    cv2.destroyAllWindows()
- 
- 
-if __name__ == "__main__":
-    main()
+        return "Desconocido"
+    return "Desconocido"
