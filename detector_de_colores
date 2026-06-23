@@ -1,0 +1,43 @@
+import cv2
+import numpy as np
+cam = cv2.VideoCapture(0)
+while True:
+    ret, frame = cam.read()
+    if not ret:
+        break
+    alto, ancho, _ = frame.shape
+    # Tomar el píxel del centro
+    pixel = frame[alto//2, ancho//2]
+    hsv = cv2.cvtColor(np.uint8([[pixel]]),
+                       cv2.COLOR_BGR2HSV)
+    h = hsv[0][0][0]
+    # Color inicial
+    color = "Desconocido"
+    if h < 10 or h > 170:
+        color = "ROJO"
+    elif 10 <= h < 25:
+        color = "NARANJA"
+    elif 25 <= h < 35:
+        color = "AMARILLO"
+    elif 35 <= h < 85:
+        color = "VERDE"
+    elif 85 <= h < 130:
+        color = "AZUL"
+    cv2.circle(frame,
+               (ancho//2, alto//2),
+               10,
+               (0,0,255),
+               -1)
+    cv2.putText(frame,
+                color,
+                (20,50),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                1,
+                (255,255,255),
+                2)
+    cv2.imshow("Detector de Colores", frame)
+    # Salir con ESC
+    if cv2.waitKey(1) == 27:
+        break
+cam.release()
+cv2.destroyAllWindows()
