@@ -1,0 +1,71 @@
+from pathlib import Path
+from Bases import Record, LeaderboardVacio
+
+archivo = Path(__file__).parent / "datos_juego" / "leaderboard.txt"
+separador = "-" * 40
+
+def dicc_lin(d: dict) -> str:
+    return ",".join(f"{k}={v}" for k, v in d.items())
+
+def lin_dicc(l: str) -> dict:
+    resultado: dict[str, int] = {}
+    if not l.strip():
+        return resultado
+    for par in l.split(","):
+        k, _, v = par.partition ("=")
+        try:
+            resultado[k] = int(v)
+        except ValueError:
+            resultado[k] = 0
+    return resultado    
+
+def guardar_partida(record: Record) -> None:
+    archivo.parent.mkdir(parents=True, exist_ok=True)
+    linea = [f"Nombre: {record.jugador}", f"Carrera: {record.carrera}", f"Puntaje: {record.puntaje}", f"Fecha: {record.fecha}", f"Puntaje por color: {dicc_lin(record.puntaje_c)}", f"Puntaje por forma: {dicc_lin(record.puntaje_f)}",separador]
+
+    try:
+        with open(archivo, "a", encoding="utf-8") as f:
+            f.write("\n".join(linea) + "\n")
+    except OSError as exc:
+        raise OSError(f"Error al guardar la partida: {exc}") from exc
+    
+def cargar_partidas() -> list[Record]:
+    if not archivo.exists():
+        return []
+    
+    try:
+        lineas_vacias = archivo.read_text(encoding="utf-8")
+    except OSError as exc:
+        raise OSError(f"Error al leer el Leaderboard: {exc}") from exc
+    
+    blocks = [b for b in lineas_vacias.split(separador) if b.strip()]
+    records: list[Record] = []
+
+    for block in blocks:
+        campo: dict[str, str] = {}
+        for linea in block.strip().splitlines():
+            if ":" not in linea:
+                continue
+            k, _, v = linea.partition(":")
+            campo[k.strip()] = v.strip()
+        if not campo:
+            continue
+        try:
+            record = Record(
+                jugador=campo.get("Nombre", ""),
+                carrera=campo.get("Carrera", ""),
+                puntaje=int(campo.get("Puntaje", 0)),
+                fecha=campo.get("Fecha", ""),
+                puntaje_c=lin_dicc(campo.get("Puntaje por color", "")),
+                puntaje_f=lin_dicc(campo.get("Puntaje por forma", ""))
+            )
+        except (ValueError, KeyError):
+            continue
+        records.append(record)
+    return records
+
+def cargar_leaderboard() -> list[Record]:
+    records = cargar_partidas()
+    if not records:
+        raise LeaderboardVacio("No se hay partidas registradas")
+    return sorted(records, key=lambda r: r.puntaje, reverse=True)
