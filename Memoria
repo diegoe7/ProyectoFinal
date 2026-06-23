@@ -1,5 +1,8 @@
 from pathlib import Path
 from Bases import Record, LeaderboardVacio
+from logs import get_logger
+
+logger = get_logger(__name__)
 
 archivo = Path(__file__).parent / "datos_juego" / "leaderboard.txt"
 separador = "-" * 40
@@ -27,6 +30,7 @@ def guardar_partida(record: Record) -> None:
         with open(archivo, "a", encoding="utf-8") as f:
             f.write("\n".join(linea) + "\n")
     except OSError as exc:
+        logger.error(f"Error al guardar la partida: {exc}")
         raise OSError(f"Error al guardar la partida: {exc}") from exc
     
 def cargar_partidas() -> list[Record]:
@@ -36,6 +40,7 @@ def cargar_partidas() -> list[Record]:
     try:
         lineas_vacias = archivo.read_text(encoding="utf-8")
     except OSError as exc:
+        logger.error(f"Error al leer el Leaderboard: {exc}")
         raise OSError(f"Error al leer el Leaderboard: {exc}") from exc
     
     blocks = [b for b in lineas_vacias.split(separador) if b.strip()]
