@@ -1,12 +1,15 @@
 from dataclasses import dataclass
 from datetime import datetime
 import random
+from logs import get_logger
 
-formas: set[str] = {"cuadrado", "triangulo", "circulo", "rectangulo", "hexagono"}
-colores: set[str] = {"rojo", "verde", "azul", "amarillo", "naranja"}
+logger = get_logger(__name__)
 
-orden_formas: list[str] = ["cuadrado", "triangulo", "circulo", "rectangulo", "hexagono"]
-orden_colores: list[str] = ["rojo", "verde", "azul", "amarillo", "naranja"]
+formas: set[str] = {"Cuadrado", "Triangulo", "Circulo", "Rectangulo", "Hexagono"}
+colores: set[str] = {"Rojo", "Verde", "Azul", "Amarillo", "Naranja"}
+
+orden_formas: list[str] = ["Cuadrado", "Triangulo", "Circulo", "Rectangulo", "Hexagono"]
+orden_colores: list[str] = ["Rojo", "Verde", "Azul", "Amarillo", "Naranja"]
 
 class ErrorJuego(Exception):
     pass
@@ -77,7 +80,7 @@ class Partida:
     def terminado(self) -> bool:
         return len(self.rondas_jugadas) >= self.rondas
     
-    def resultado(self) -> Record:
+    def resultado(self) -> "Record":
         return Record(
             jugador=self.jugador.nombre,
             carrera=self.jugador.carrera,
