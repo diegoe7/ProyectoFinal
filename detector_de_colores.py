@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 from logs import get_logger
-from detector_de_colores import clasificar
+from DeteccionFiguras import clasificar
 
 A_Contraste = 1500
 Rangos_HSV = {
@@ -31,7 +31,7 @@ def color_dominante(margen_hsv: np.ndarray, mask: np.ndarray) -> str | None:
             pix = count
             color = nombre_color
 
-    if color is not None and pix / pixeles >=0.35:
+    if color is not None and pix / pixeles >= 0.35:
         return color
     return None
 
@@ -48,7 +48,7 @@ def detectar_figuras(margen: np.ndarray) -> list[Detectar]:
     borroso = cv2.GaussianBlur(margen, (5, 5), 0)
     hsv = cv2.cvtColor(borroso, cv2.COLOR_BGR2HSV)
     gris = cv2.cvtColor(borroso, cv2.COLOR_BGR2GRAY)
-    borde =cv2.Canny(gris, 50, 150)
+    borde = cv2.Canny(gris, 50, 150)
     borde = cv2.dilate(borde, np.ones((3, 3), np.uint8), iterations=1)
     contornos, _ = cv2.findContours(borde, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -83,5 +83,5 @@ def detectar_figuras(margen: np.ndarray) -> list[Detectar]:
             cy = int(M["m01"] / M["m00"])
         else:
             cx, cy = x + w // 2, y + h // 2
-        items.append(Detectar(forma, color, contorno, (x, y, w, h), centro = (cx, cy)))
+        items.append(Detectar(forma, color, contorno, (x, y, w, h), centro=(cx, cy)))
     return items
