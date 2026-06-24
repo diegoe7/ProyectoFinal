@@ -11,6 +11,7 @@ colores: set[str] = {"Rojo", "Verde", "Azul", "Amarillo", "Naranja"}
 orden_formas: list[str] = ["Cuadrado", "Triangulo", "Circulo", "Rectangulo", "Hexagono"]
 orden_colores: list[str] = ["Rojo", "Verde", "Azul", "Amarillo", "Naranja"]
 
+
 class ErrorJuego(Exception):
     pass
 
@@ -27,12 +28,17 @@ class LeaderboardVacio(ErrorJuego):
 class Jugador:
     nombre: str
     carrera: str
+
     def __post_init__(self) -> None:
         self.nombre = self.nombre.strip()
         self.carrera = self.carrera.strip()
+
         if not self.nombre or not self.carrera:
+            logger.error("Datos inválidos al crear jugador")
             raise DatosInvalidos("El nombre y la carrera no pueden estar vacíos")
-        
+
+        logger.info(f"Jugador creado: {self.nombre} - {self.carrera}")
+
 @dataclass
 class Ronda:
     forma_el: str
@@ -49,6 +55,7 @@ class Ronda:
 class Partida:
     duracion = 20
     rondas = 3
+
     def __init__(self, jugador: Jugador) -> None:
         self.jugador = jugador
         self.rondas_jugadas: list[Ronda] = []
@@ -56,31 +63,50 @@ class Partida:
         self.puntaje_f: dict[str, int] = {forma: 0 for forma in orden_formas}
         self.fyc_usados: set[tuple[str, str]] = set()
 
+        logger.info(f"Partida iniciada para {jugador.nombre}")
+
     def siguiente_fig(self) -> tuple[str, str]:
-        disp=[(forma, color) for forma in formas for color in colores if (forma, color) not in self.fyc_usados]
+        disp = [
+            (forma, color)
+            for forma in formas
+            for color in colores
+            if (forma, color) not in self.fyc_usados
+        ]
+
         if not disp:
             self.fyc_usados.clear()
-            disp=[(f, c) for f in formas for c in colores]
-        
+            disp = [(f, c) for f in formas for c in colores]
+
         elec = random.choice(disp)
         self.fyc_usados.add(elec)
+
+        logger.info(f"Nueva figura objetivo: {elec}")
+
         return elec
-    
+
     def res_ronda(self, resultado: Ronda) -> None:
         self.rondas_jugadas.append(resultado)
+
         if resultado.c_check:
             self.puntaje_c[resultado.color_el] += 1
         if resultado.f_check:
             self.puntaje_f[resultado.forma_el] += 1
 
+        logger.info(
+            f"Ronda registrada: {resultado.forma_el} {resultado.color_el} "
+            f"puntaje={resultado.puntaje}"
+        )
+
     @property
     def puntaje_total(self) -> int:
         return sum(r.puntaje for r in self.rondas_jugadas)
-    
+
     def terminado(self) -> bool:
         return len(self.rondas_jugadas) >= self.rondas
-    
+
     def resultado(self) -> "Record":
+        logger.info("Generando resultado final de la partida")
+
         return Record(
             jugador=self.jugador.nombre,
             carrera=self.jugador.carrera,

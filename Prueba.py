@@ -6,7 +6,7 @@ on live camera frames.
 """
 
 import cv2
-from Colores import detectar_figuras
+from detector_de_colores import detectar_figuras
 
 
 def main():
