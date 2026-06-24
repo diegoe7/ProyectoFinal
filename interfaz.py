@@ -3,10 +3,6 @@ import tkinter as tk
 import threading
 import cv2
 import time
-
-# =====================
-# BACKEND
-# =====================
 from Bases import Jugador, Partida
 from Controlador import Controlador
 from detector_de_colores import detectar_figuras

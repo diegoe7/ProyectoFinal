@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 from logs import get_logger
-from DeteccionFiguras import clasificar
+from detector_de_colores import clasificar
 
 A_Contraste = 1500
 Rangos_HSV = {
