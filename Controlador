@@ -1,6 +1,6 @@
 import time
 from Bases import Ronda
-from Colores import Detectar
+from detector_de_colores import Detectar
 
 class Controlador:
     
