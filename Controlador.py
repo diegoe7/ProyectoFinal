@@ -1,62 +1,55 @@
 import time
 from Bases import Ronda
-
+from Colores import Detectar
 
 class Controlador:
-
-    def __init__(self, forma_el: str, color_el: str, duracion: int = 20):
-        self.forma_el = forma_el
+    
+    def __init__(self, figura_el: str, color_el: str, duracion: int = 20):
+        self.figura_el = figura_el
         self.color_el = color_el
         self.duracion = duracion
-
         self.tiempo_inicio = time.monotonic()
-
-        self.fig_correcta = False
-        self.col_correcta = False
-        self.fyc_correcta = False
-
+        self.f_check = False
+        self.c_check = False
+        self.t_check = False
         self.ronda_finalizada = False
-        self.tiempo_finalizado = None
+        self.tiempo_finalizado: float | None = None
 
     def actualizar(self, detecciones: list) -> None:
         if self.ronda_finalizada:
             return
-
         for det in detecciones:
-            fig_ok = det.forma == self.forma_el
-            col_ok = det.color == self.color_el
-
-            if fig_ok:
-                self.fig_correcta = True
-
-            if col_ok:
-                self.col_correcta = True
-
-            if fig_ok and col_ok:
-                self.fyc_correcta = True
-
-        if self.fyc_correcta or self.tiempo_restante() <= 0:
+            fig_corr = det.forma == self.figura_el
+            col_corr = det.color == self.color_el
+            if fig_corr:
+                self.f_check = True
+            if col_corr:
+                self.c_check = True
+            if fig_corr and col_corr:
+                self.t_check = True
+        if self.t_check or self.tiempo_restante() <= 0:
             self.fin()
 
     def tiempo_restante(self) -> float:
-        return max(0.0, self.duracion - (time.monotonic() - self.tiempo_inicio))
+        pasado = time.monotonic() - self.tiempo_inicio
+        return max(0.0, self.duracion - pasado)
+
+    def finalizar(self) -> bool:
+        return self.ronda_finalizada
 
     def fin(self) -> None:
-        if not self.ronda_finalizada:
-            self.ronda_finalizada = True
-            self.tiempo_finalizado = time.monotonic()
+        self.ronda_finalizada = True
+        self.tiempo_finalizado = time.monotonic()
 
     def resultado_ronda(self) -> Ronda:
         if self.tiempo_finalizado is None:
             self.fin()
-
-        tiempo = self.tiempo_finalizado - self.tiempo_inicio
-
+        duracion = self.tiempo_finalizado - self.tiempo_inicio
         return Ronda(
-            forma_el=self.forma_el,
+            forma_el=self.figura_el,
             color_el=self.color_el,
-            f_check=self.fig_correcta,
-            c_check=self.col_correcta,
-            t_check=self.fyc_correcta,
-            tiempo=tiempo
+            f_check=self.f_check,
+            c_check=self.c_check,
+            t_check=self.t_check,
+            tiempo=duracion,
         )
