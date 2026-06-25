@@ -46,11 +46,10 @@ def clasificar(puntos: list[tuple[float, float]]) -> str:
     if n == 3:
         return "Triangulo"
     if n == 4:
-        angulos = [angulo(puntos[i - 1], puntos[i], puntos[(i + 1) % n]) for i in range(n)]
-        if all(80 <= a <= 100 for a in angulos):
-            return "Cuadrado"
-        else:
-            return "Rectangulo"
+        lados = [dist(puntos[i], puntos[(i + 1) % 4]) for i in range(4)]
+        lado_max, lado_min = max(lados), min(lados)
+        es_cuad = lado_max > 1e-6 and (lado_min/lado_max)>0.85
+        return "Cuadrado" if es_cuad else "Rectangulo"
     if n in (5, 6):
         angulos = []
         for i in range(n):
