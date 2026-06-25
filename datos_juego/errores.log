@@ -202,3 +202,65 @@ ImportError: cannot import name 'LeaderboardGUI' from 'leaderboard_gui' (/home/m
 2026-06-24 13:55:52 | INFO | Bases | Nueva figura objetivo: ('Hexagono', 'Azul')
 2026-06-24 13:56:12 | INFO | Bases | Ronda registrada: Hexagono Azul puntaje=0
 2026-06-24 13:56:12 | INFO | Bases | Generando resultado final de la partida
+2026-06-24 21:55:36 | INFO | Bases | Jugador creado: Delia - BIO
+2026-06-24 21:55:36 | INFO | Bases | Partida iniciada para Delia
+2026-06-24 21:55:36 | INFO | Bases | Nueva figura objetivo: ('Rectangulo', 'Azul')
+2026-06-24 21:55:42 | INFO | Bases | Jugador creado: Delia - BIO
+2026-06-24 21:55:42 | INFO | Bases | Partida iniciada para Delia
+2026-06-24 21:55:56 | INFO | Bases | Ronda registrada: Rectangulo Azul puntaje=0
+2026-06-24 21:55:56 | INFO | Bases | Nueva figura objetivo: ('Cuadrado', 'Amarillo')
+2026-06-24 21:56:16 | INFO | Bases | Ronda registrada: Cuadrado Amarillo puntaje=0
+2026-06-24 21:56:16 | INFO | Bases | Nueva figura objetivo: ('Triangulo', 'Amarillo')
+2026-06-24 21:56:36 | INFO | Bases | Ronda registrada: Triangulo Amarillo puntaje=0
+2026-06-24 21:56:36 | INFO | Bases | Generando resultado final de la partida
+2026-06-24 21:56:43 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 21:56:51 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 21:56:53 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 21:56:54 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 21:56:57 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 21:56:58 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 21:57:04 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 21:57:06 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 21:57:13 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 21:57:32 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 21:57:55 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 21:58:12 | INFO | Bases | Jugador creado: Delia - BIO
+2026-06-24 21:58:12 | INFO | Bases | Partida iniciada para Delia
+2026-06-24 21:58:12 | INFO | Bases | Nueva figura objetivo: ('Cuadrado', 'Naranja')
+2026-06-24 21:58:20 | INFO | Bases | Jugador creado: Delia - BIO
+2026-06-24 21:58:20 | INFO | Bases | Partida iniciada para Delia
+2026-06-24 21:58:26 | INFO | Bases | Jugador creado: Delia - BIO
+2026-06-24 21:58:26 | INFO | Bases | Partida iniciada para Delia
+2026-06-24 21:58:30 | INFO | Bases | Jugador creado: Delia - BIO
+2026-06-24 21:58:30 | INFO | Bases | Partida iniciada para Delia
+2026-06-24 21:58:33 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 21:58:35 | INFO | Bases | Jugador creado: Delia - BIO
+2026-06-24 21:58:35 | INFO | Bases | Partida iniciada para Delia
+2026-06-24 22:00:45 | INFO | Bases | Jugador creado: Mine - bio
+2026-06-24 22:00:45 | INFO | Bases | Partida iniciada para Mine
+2026-06-24 22:00:45 | INFO | Bases | Nueva figura objetivo: ('Rectangulo', 'Azul')
+2026-06-24 22:01:06 | INFO | Bases | Ronda registrada: Rectangulo Azul puntaje=0
+2026-06-24 22:01:06 | INFO | Bases | Nueva figura objetivo: ('Hexagono', 'Rojo')
+2026-06-24 22:01:18 | INFO | Bases | Generando resultado final de la partida
+2026-06-24 22:01:21 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 22:01:23 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 22:01:23 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 22:01:23 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 22:01:24 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 22:02:02 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 22:02:05 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 22:02:44 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 22:02:45 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 22:02:45 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 22:02:46 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 22:02:46 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 22:02:47 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 22:02:47 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 22:02:47 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 22:04:40 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 22:04:41 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 22:04:41 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 22:04:42 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 22:04:43 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 22:04:43 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
+2026-06-24 22:04:44 | ERROR | __main__ | Error abriendo leaderboard: No module named 'matplotlib'
