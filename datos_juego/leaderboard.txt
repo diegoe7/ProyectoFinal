@@ -82,3 +82,10 @@ Fecha: 2026-06-24 13:48:11
 Puntaje por color: Rojo=0,Verde=0,Azul=0,Amarillo=0,Naranja=0
 Puntaje por forma: Cuadrado=0,Triangulo=0,Circulo=0,Rectangulo=0,Hexagono=1
 ----------------------------------------
+Nombre: minel
+Carrera: bio
+Puntaje: 1
+Fecha: 2026-06-25 10:26:02
+Puntaje por color: Rojo=0,Verde=0,Azul=0,Amarillo=0,Naranja=0
+Puntaje por forma: Cuadrado=0,Triangulo=0,Circulo=0,Rectangulo=1,Hexagono=0
+----------------------------------------
